@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DataBase");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(connectionString);  // Передача строки подключения
+    options.UseNpgsql(connectionString);  
 });
 
 // Регистрация репозиториев
@@ -27,6 +27,7 @@ builder.Services.AddScoped<IRepository<Building>, Repository<Building>>();
 builder.Services.AddScoped<IRepository<Notification>, Repository<Notification>>();
 builder.Services.AddScoped<IRepository<Sensor>, Repository<Sensor>>();
 builder.Services.AddScoped<IRepository<User>, Repository<User>>();
+builder.Services.AddScoped<IRepository<Reading>, Repository<Reading>>();
 
 // Регистрация сервисов
 builder.Services.AddScoped<IBuildingService, BuildingService>();

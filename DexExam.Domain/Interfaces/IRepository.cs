@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using DexExam.Domain.Models;
 
 namespace TgBotGuide.Domain.Interfaces;
 
