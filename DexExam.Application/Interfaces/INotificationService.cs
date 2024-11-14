@@ -5,5 +5,6 @@ namespace DexExam.Application.Interfaces;
 public interface INotificationService
 {
     Task NotifyUserAsync(Guid userId, string message);
+    Task<ICollection<Notification>> GetNotificationsForUserAsync(Guid userId);
 }
     

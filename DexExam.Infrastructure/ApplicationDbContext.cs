@@ -7,7 +7,9 @@ namespace DexExam.Infrastructure;
 public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     public ApplicationDbContext() { }
-
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    { }
+    
     // DbSet для всех сущностей
     public DbSet<User> Users { get; set; }
     public DbSet<Building> Buildings { get; set; }

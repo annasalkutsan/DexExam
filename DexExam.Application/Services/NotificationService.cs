@@ -26,4 +26,10 @@ public class NotificationService : INotificationService
         // Добавляем уведомление в базу данных
         await _notificationRepository.AddAsync(notification);
     }
+
+    public async Task<ICollection<Notification>> GetNotificationsForUserAsync(Guid userId)
+    {
+        var notifications = await _notificationRepository.FindAsync(n => n.UserId == userId);
+        return notifications;
+    }
 }

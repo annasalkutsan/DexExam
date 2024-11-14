@@ -14,6 +14,11 @@ public class SensorService : ISensorService
         _notificationService = notificationService;
     }
 
+    public async Task<Sensor> GetSensorByIdAsync(Guid sensorId)
+    {
+        return await _sensorRepository.GetByIdAsync(sensorId);
+    }
+    
     public async Task AddReadingAsync(Sensor sensor, double temperature, double humidity, double batteryLevel)
     {
         var newReading = new Reading
