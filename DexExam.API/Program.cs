@@ -1,10 +1,11 @@
 using DexExam.Infrastructure;
 using DexExam.Application.Interfaces;
+using DexExam.Application.Mapping;
 using DexExam.Application.Services;
+using DexExam.Domain.Interfaces;
 using DexExam.Domain.Models;
+using DexExam.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using TgBotGuide.Domain.Interfaces;
-using TgBotGuide.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(connectionString);  
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Регистрация репозиториев
 builder.Services.AddScoped<IRepository<Building>, Repository<Building>>();

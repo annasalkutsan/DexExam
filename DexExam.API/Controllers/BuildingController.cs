@@ -1,12 +1,9 @@
-﻿using DexExam.Application.Interfaces;
-using DexExam.Domain.Models;
+﻿using DexExam.Application.DTOs.Building;
+using DexExam.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DexExam.API.Controllers
 {
-    /// <summary>
-    /// Контроллер для работы с зданиями
-    /// </summary>
     [ApiController]
     [Route("api/buildings")]
     public class BuildingController : ControllerBase
@@ -18,9 +15,6 @@ namespace DexExam.API.Controllers
             _buildingService = buildingService;
         }
 
-        /// <summary>
-        /// Получить список зданий пользователя
-        /// </summary>
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserBuildingsAsync(Guid userId)
         {
@@ -28,19 +22,13 @@ namespace DexExam.API.Controllers
             return Ok(buildings);
         }
 
-        /// <summary>
-        /// Добавить новое здание
-        /// </summary>
         [HttpPost("user/{userId}")]
-        public async Task<IActionResult> AddBuildingAsync(Guid userId, [FromBody] Building building)
+        public async Task<IActionResult> AddBuildingAsync(Guid userId, [FromBody] BuildingRequestDto buildingDto)
         {
-            await _buildingService.AddBuildingAsync(userId, building);
-            return CreatedAtAction(nameof(GetUserBuildingsAsync), new { userId = userId }, building);
+            await _buildingService.AddBuildingAsync(userId, buildingDto);
+            return CreatedAtAction(nameof(GetUserBuildingsAsync), new { userId = userId }, buildingDto);
         }
 
-        /// <summary>
-        /// Удалить здание
-        /// </summary>
         [HttpDelete("user/{userId}/{buildingId}")]
         public async Task<IActionResult> RemoveBuildingAsync(Guid userId, Guid buildingId)
         {
@@ -48,13 +36,10 @@ namespace DexExam.API.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Обновить данные здания
-        /// </summary>
         [HttpPut("user/{userId}/{buildingId}")]
-        public async Task<IActionResult> UpdateBuildingAsync(Guid userId, Guid buildingId, [FromBody] Building updatedBuilding)
+        public async Task<IActionResult> UpdateBuildingAsync(Guid userId, Guid buildingId, [FromBody] BuildingRequestDto updatedBuildingDto)
         {
-            var building = await _buildingService.UpdateBuildingAsync(userId, buildingId, updatedBuilding);
+            var building = await _buildingService.UpdateBuildingAsync(userId, buildingId, updatedBuildingDto);
             if (building == null) return NotFound();
             return Ok(building);
         }

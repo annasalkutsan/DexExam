@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
-using DexExam.Infrastructure;
+using DexExam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using TgBotGuide.Domain.Interfaces;
 
-namespace TgBotGuide.Infrastructure.Repositories;
+namespace DexExam.Infrastructure.Repositories;
 
 public class Repository<T>:IRepository<T> where T : class
 {

@@ -86,5 +86,24 @@ namespace DexExam.API.Controllers
             await _sensorService.RemoveReadingAsync(sensorId, readingId);
             return NoContent();
         }
+        
+        //Периодическое обновление данных от датчиков
+        [HttpPost("poll-data")]
+        public async Task<IActionResult> PollSensorDataAsync()
+        {
+            await _sensorService.PollSensorDataAsync();
+            return NoContent();
+        }
+
+        //Обработка показаний датчика
+        [HttpPost("{sensorId}/process-reading")]
+        public async Task<IActionResult> ProcessSensorReadingAsync(Guid sensorId, [FromBody] Reading newReading)
+        {
+            var sensor = await _sensorService.GetSensorByIdAsync(sensorId);
+            if (sensor == null) return NotFound();
+
+            await _sensorService.ProcessSensorReadingAsync(sensor, newReading);
+            return NoContent();
+        }
     }
 }

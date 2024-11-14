@@ -1,65 +1,54 @@
-﻿using DexExam.Application.Interfaces;
+﻿using AutoMapper;
+using DexExam.Application.DTOs.Notification;
+using DexExam.Application.DTOs.User;
 using DexExam.Domain.Models;
-using TgBotGuide.Domain.Interfaces;
+using DexExam.Application.Interfaces;
+using DexExam.Domain.Interfaces;
 
 namespace DexExam.Application.Services
 {
-    /// <summary>
-    /// Реализация сервиса для работы с пользователями
-    /// </summary>
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Notification> _notificationRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IRepository<User> userRepository, IRepository<Notification> notificationRepository)
+        public UserService(IRepository<User> userRepository, IRepository<Notification> notificationRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _notificationRepository = notificationRepository;
+            _mapper = mapper;
         }
 
-        /// <summary>
-        /// Получить пользователя по его идентификатору
-        /// </summary>
-        public async Task<User> GetUserByIdAsync(Guid userId)
+        public async Task<UserResponseDto> GetUserByIdAsync(Guid userId)
         {
-            return await _userRepository.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
+            return _mapper.Map<UserResponseDto>(user);
         }
 
-        /// <summary>
-        /// Получить уведомления для пользователя
-        /// </summary>
-        public async Task<ICollection<Notification>> GetUserNotificationsAsync(Guid userId)
+        public async Task<ICollection<NotificationResponseDto>> GetUserNotificationsAsync(Guid userId)
         {
-            return await _notificationRepository.FindAsync(n => n.UserId == userId);
+            var notifications = await _notificationRepository.FindAsync(n => n.UserId == userId);
+            return _mapper.Map<ICollection<NotificationResponseDto>>(notifications);
         }
 
-        /// <summary>
-        /// Создать нового пользователя
-        /// </summary>
-        public async Task<User> CreateUserAsync(User user)
+        public async Task<UserResponseDto> CreateUserAsync(UserRequestDto userDto)
         {
+            var user = _mapper.Map<User>(userDto);
             await _userRepository.AddAsync(user);
-            return user;
+            return _mapper.Map<UserResponseDto>(user);
         }
 
-        /// <summary>
-        /// Обновить информацию о пользователе
-        /// </summary>
-        public async Task<User> UpdateUserAsync(Guid userId, User updatedUser)
+        public async Task<UserResponseDto> UpdateUserAsync(Guid userId, UserRequestDto updatedUserDto)
         {
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) return null;
-            user.Username = updatedUser.Username;
-            user.Email = updatedUser.Email;
-            user.Password = updatedUser.Password;
+
+            _mapper.Map(updatedUserDto, user); // обновляем поля объекта user
             await _userRepository.UpdateAsync(user);
-            return user;
+            return _mapper.Map<UserResponseDto>(user);
         }
 
-        /// <summary>
-        /// Удалить пользователя
-        /// </summary>
         public async Task<bool> DeleteUserAsync(Guid userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);

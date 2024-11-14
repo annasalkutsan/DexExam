@@ -1,10 +1,6 @@
 ﻿using DexExam.Application.Interfaces;
+using DexExam.Domain.Interfaces;
 using DexExam.Domain.Models;
-using TgBotGuide.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DexExam.Application.Services
 {

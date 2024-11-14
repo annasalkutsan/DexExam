@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
-using DexExam.Domain.Models;
 
-namespace TgBotGuide.Domain.Interfaces;
+namespace DexExam.Domain.Interfaces;
 
 public interface IRepository<T> where T : class
 {

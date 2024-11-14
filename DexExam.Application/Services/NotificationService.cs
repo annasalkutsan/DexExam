@@ -1,6 +1,6 @@
 ﻿using DexExam.Application.Interfaces;
+using DexExam.Domain.Interfaces;
 using DexExam.Domain.Models;
-using TgBotGuide.Domain.Interfaces;
 
 namespace DexExam.Application.Services
 {

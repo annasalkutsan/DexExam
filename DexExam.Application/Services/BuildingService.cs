@@ -1,42 +1,35 @@
-﻿using DexExam.Application.Interfaces;
+﻿using AutoMapper;
+using DexExam.Application.DTOs.Building;
+using DexExam.Application.Interfaces;
+using DexExam.Domain.Interfaces;
 using DexExam.Domain.Models;
-using TgBotGuide.Domain.Interfaces;
 
 namespace DexExam.Application.Services
 {
-    /// <summary>
-    /// Реализация сервиса для работы с зданиями
-    /// </summary>
     public class BuildingService : IBuildingService
     {
         private readonly IRepository<Building> _buildingRepository;
+        private readonly IMapper _mapper;
 
-        public BuildingService(IRepository<Building> buildingRepository)
+        public BuildingService(IRepository<Building> buildingRepository, IMapper mapper)
         {
             _buildingRepository = buildingRepository;
+            _mapper = mapper;
         }
 
-        /// <summary>
-        /// Получить список зданий пользователя
-        /// </summary>
-        public async Task<ICollection<Building>> GetUserBuildingsAsync(Guid userId)
+        public async Task<ICollection<BuildingResponseDto>> GetUserBuildingsAsync(Guid userId)
         {
             var buildings = await _buildingRepository.FindAsync(b => b.UserId == userId);
-            return buildings;
+            return _mapper.Map<ICollection<BuildingResponseDto>>(buildings);
         }
 
-        /// <summary>
-        /// Добавить новое здание
-        /// </summary>
-        public async Task AddBuildingAsync(Guid userId, Building building)
+        public async Task AddBuildingAsync(Guid userId, BuildingRequestDto buildingDto)
         {
+            var building = _mapper.Map<Building>(buildingDto);
             building.UserId = userId;
             await _buildingRepository.AddAsync(building);
         }
 
-        /// <summary>
-        /// Удалить здание
-        /// </summary>
         public async Task RemoveBuildingAsync(Guid userId, Guid buildingId)
         {
             var building = await _buildingRepository.GetByIdAsync(buildingId);
@@ -46,20 +39,18 @@ namespace DexExam.Application.Services
             }
         }
 
-        /// <summary>
-        /// Обновить данные здания
-        /// </summary>
-        public async Task<Building> UpdateBuildingAsync(Guid userId, Guid buildingId, Building updatedBuilding)
+        public async Task<BuildingResponseDto> UpdateBuildingAsync(Guid userId, Guid buildingId, BuildingRequestDto updatedBuildingDto)
         {
             var building = await _buildingRepository.GetByIdAsync(buildingId);
             if (building == null || building.UserId != userId)
                 return null;
 
-            building.Name = updatedBuilding.Name;
-            building.Address = updatedBuilding.Address;
-            building.Description = updatedBuilding.Description;
+            building.Name = updatedBuildingDto.Name;
+            building.Address = updatedBuildingDto.Address;
+            building.Description = updatedBuildingDto.Description;
+
             await _buildingRepository.UpdateAsync(building);
-            return building;
+            return _mapper.Map<BuildingResponseDto>(building);
         }
     }
 }
